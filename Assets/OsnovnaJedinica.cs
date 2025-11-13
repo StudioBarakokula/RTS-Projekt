@@ -34,18 +34,22 @@ public class OsnovnaJedinica : MonoBehaviour
 
 
 
-    void Start()
+    void Awake()
     {
         
         // getcomponent uzima komponentu ako postoji na tom objektu
         // moze i sa drugih objekata, ali vako bez icega isprid uzima sa objekta na kojem je skripta
         agent = GetComponent<NavMeshAgent>();
+
+        efektPucanja = FindFirstObjectByType<ParticleSystem>(); // PROMINI /___//_/_/_/_/_/_/_/_/_/_/_/_/_
         
         // ako ode koristimo transform.position onda ce ic direkrno ravno, vako ide tamo di bude definirano
         // i posto je brzina stavljena na varijablu koju smo definiralni, ici ce ton brzinon
         agent.speed = brzina;
 
         municija = maksMunicija;
+
+        agent.destination = transform.forward + transform.position;
 
     }
     void Update()
@@ -140,7 +144,7 @@ public class OsnovnaJedinica : MonoBehaviour
 
 
 
-    protected void Trazenje()
+    protected virtual void Trazenje()
     {
         Collider[] colls = Physics.OverlapSphere(transform.position, domet);
         for (int i = 0; i < colls.Length; i++)

@@ -8,6 +8,10 @@ public class Kamera : MonoBehaviour
     [SerializeField] float brzinaKamere = 5;
 
 
+    public Material fogOfWarMaterial; // The material with the shader
+    public Transform roditeljJedinica; // The units whose positions will be used for the fog of war
+
+
 
 
 
@@ -26,14 +30,27 @@ public class Kamera : MonoBehaviour
 
         if (Input.GetAxisRaw("Horizontal") < 0) 
         { transform.position += Vector3.right * brzinaKamere * Time.deltaTime; }
-        else if (Input.GetAxisRaw("Horizontal") > 0) 
+        if (Input.GetAxisRaw("Horizontal") > 0) 
         { transform.position -= Vector3.right * brzinaKamere * Time.deltaTime; }
 
-        else if (Input.GetAxisRaw("Vertical") < 0) 
+        if (Input.GetAxisRaw("Vertical") < 0) 
         { transform.position += Vector3.forward * brzinaKamere * Time.deltaTime; }
-        else if (Input.GetAxisRaw("Vertical") > 0) 
+        if (Input.GetAxisRaw("Vertical") > 0) 
         { transform.position -= Vector3.forward * brzinaKamere * Time.deltaTime; }
 
+
+
+
+        // shader
+        Vector4[] points = new Vector4[32]; 
+        for (int i = 0; i < roditeljJedinica.childCount; i++)
+        {
+            points[i] = roditeljJedinica.GetChild(i).position; // Set the world position of each unit
+        }
+
+        // Set the points and number of points on the shader
+        fogOfWarMaterial.SetVectorArray("_Points", points);
+        fogOfWarMaterial.SetFloat("_PointsNum", Mathf.Min(32, roditeljJedinica.childCount));
 
     }
 

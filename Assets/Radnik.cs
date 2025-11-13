@@ -18,44 +18,19 @@ public class Radnik : OsnovnaJedinica
 
 
 
-
-
-    protected override void Pucanje()
+    override protected void Trazenje()
     {
-
-        // ako ima metaka moze pucat
-        if (municija > 0)
+        Collider[] colls = Physics.OverlapSphere(transform.position, domet);
+        for (int i = 0; i < colls.Length; i++)
         {
-            efektPucanja.transform.position = transform.position;
-            efektPucanja.Play();
-            // stvaramo rendom broj i gledamo jeli unutar postotka za pogodit
-            if (Random.Range(0, 101) < sansaZaPogodak)
+            Debug.Log("SQEDA");
+            if (colls[i].gameObject.layer == 8 ||colls[i].gameObject.layer == 9)
             {
-                if (meta.GetComponent<NeprijateljOsnova>())
-                {
-                    meta.GetComponent<NeprijateljOsnova>().Pogoden(napad);
-                }
-                else if(meta.gameObject.layer == 9) { Debug.Log("rudarimo"); }
+                Debug.Log("asddsa " + colls[i].transform.name);
+                meta = colls[i].transform; i = colls.Length;
             }
-
-            zadnjePucanje = Time.time;
-            municija--;
-
-            if (meta == null)
-            {
-                Trazenje();
-            }
-
         }
-        else
-        {
-            // ako nema metaka ne moze pucat x sekundi tj trenutacno vrime plus x
-            zadnjePucanje = Time.time + promjenaMunicije;
-            municija = maksMunicija;
-        }
-
     }
-
 
 
 

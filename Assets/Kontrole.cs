@@ -15,9 +15,11 @@ public class Kontrole : MonoBehaviour
     Collider[] odabraneJedinice;
 
     [SerializeField] Transform odabirnaKutija;
+    [SerializeField] Transform odabirniKrugZaJedinice;
 
-    [SerializeField] Material obicniMaterijal;
-    [SerializeField] Material odabraniMaterijal;
+
+
+    [SerializeField] float pocetnaVelicinaOdabira;
 
 
     bool odabiranje = true;
@@ -58,7 +60,9 @@ public class Kontrole : MonoBehaviour
                     {
                         if (odabraneJedinice[i] && odabraneJedinice[i].gameObject.layer == 7)
                         {
-                            odabraneJedinice[i].GetComponent<Renderer>().material = obicniMaterijal;
+                            // UNISTI ZADNJU STVAR KOJA BI TRIBALA BIT KRUG
+                            Destroy(odabraneJedinice[i].transform.GetChild(
+                                odabraneJedinice[i].transform.childCount - 1).gameObject);
                         }
                     }
                 }
@@ -120,9 +124,11 @@ public class Kontrole : MonoBehaviour
                                 odabraneJedinice[i].GetComponent<OsnovnaJedinica>().domet;
                         }
                         // radnik i rude
-                        else if(hit.transform.gameObject.layer == 9 && 
+                        else if((hit.transform.gameObject.layer == 9 || 
+                            hit.transform.gameObject.layer == 8) && 
                             odabraneJedinice[i].GetComponent<Radnik>())
                         {
+                            Debug.Log("meta");
                             odabraneJedinice[i].GetComponent<Radnik>().NovaMeta(hit.transform);
                             odabraneJedinice[i].GetComponent<NavMeshAgent>().destination = hit.point;
                         }
@@ -130,7 +136,7 @@ public class Kontrole : MonoBehaviour
                         {
                             odabraneJedinice[i].GetComponent<NavMeshAgent>().destination = hit.point;
                         }
-
+                        Debug.Log("sloj " + hit.transform.gameObject.layer);
                     }
 
                 }
@@ -153,37 +159,58 @@ public class Kontrole : MonoBehaviour
     void OdabirJedinica()
     {
 
-        odabirnaKutija.position = (pocetnaOdabir + zadnjaOdabir) / 2;
-        // localScale je za skaliranje velicine
-        odabirnaKutija.localScale = pocetnaOdabir - zadnjaOdabir + Vector3.up * 0.1f;
+        OdabiranjeKutija();
 
 
         // setactive je za gasenje/paljenje objekata
         odabirnaKutija.gameObject.SetActive(true);
+
 
     }
 
     void KrajOdabira()
     {
 
-        odabraneJedinice = Physics.OverlapBox((pocetnaOdabir + zadnjaOdabir) / 2,
-             Absoluter(pocetnaOdabir - zadnjaOdabir) / 2 + Vector3.up * 20f, Quaternion.Euler(Vector3.zero));
-
-
-
+        OdabranePrikazi();
         odabirnaKutija.gameObject.SetActive(false);
 
+    }
+
+    void OdabranePrikazi()
+    {
+
+        OdabiranjeKutija();
+
+        odabraneJedinice = Physics.OverlapBox(odabirnaKutija.position, odabirnaKutija.localScale / 2, 
+            Quaternion.Euler(Vector3.zero));
 
         for (int i = 0; i < odabraneJedinice.Length; i++)
         {
             if (odabraneJedinice[i].gameObject.layer == 7)
             {
-                odabraneJedinice[i].GetComponent<Renderer>().material = odabraniMaterijal;
+                Transform k = Instantiate(odabirniKrugZaJedinice, odabraneJedinice[i].transform);
+                k.localPosition = Vector3.up * -0.45f;
             }
+        }
+    }
 
+
+    void OdabiranjeKutija()
+    {
+
+        Vector3 centar = (pocetnaOdabir + zadnjaOdabir) / 2;
+        Vector3 halfe = 0.5f * Vector3.one;
+
+        if (Vector3.Distance(pocetnaOdabir, zadnjaOdabir) > 1)
+        {
+            halfe = Absoluter(pocetnaOdabir - zadnjaOdabir) + Vector3.up * 2f;
         }
 
+        odabirnaKutija.position = centar;
+        odabirnaKutija.localScale = halfe;
+
     }
+
 
 
 
@@ -193,6 +220,15 @@ public class Kontrole : MonoBehaviour
     Vector3 Absoluter(Vector3 vec)
     {
         return new Vector3(Mathf.Abs(vec.x), Mathf.Abs(vec.y), Mathf.Abs(vec.z));
+    }
+
+    bool LenghtChecker(Vector3 one, Vector3 two)
+    {
+
+        if((one.x - two.x) > 1 && (one.y - two.y) > 1) { return true; }
+
+        return false;
+
     }
 
 
