@@ -105,7 +105,7 @@ Material:
     - _NumPoints: 8
     - _OcclusionStrength: 1
     - _Parallax: 0.005
-    - _PointsNum: 32
+    - _PointsNum: 0
     - _QueueOffset: 0
     - _Radius: 3
     - _ReceiveShadows: 1
