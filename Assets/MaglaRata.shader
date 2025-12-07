@@ -26,8 +26,8 @@ Properties
 
             // Properties
             float4 _PointA;
-            float _PointsNum = 32;
-            float4 _Points[32];
+            float _PointsNum = 512;
+            float4 _Points[512];
             float _Radius;
             float _EdgeWidth;
             float _Transparency;

@@ -5,7 +5,8 @@ public class Kamera : MonoBehaviour
 
 
     // Serialized field daje moguænost namistanja vrijednosti u unityu umisto samo kodu
-    [SerializeField] float brzinaKamere = 5;
+    [SerializeField] float brzinaKamere = 9;
+    [SerializeField] float scrollMul = 9;
 
 
     public Material fogOfWarMaterial; // The material with the shader
@@ -39,10 +40,20 @@ public class Kamera : MonoBehaviour
         { transform.position -= Vector3.forward * brzinaKamere * Time.deltaTime; }
 
 
+        if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
+        {
+            transform.position += Vector3.up * brzinaKamere * scrollMul * Time.deltaTime;
+        }
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") > 0)
+        {
+            transform.position -= Vector3.up * brzinaKamere * scrollMul * Time.deltaTime;
+        }
+    
+
 
 
         // shader
-        Vector4[] points = new Vector4[32]; 
+        Vector4[] points = new Vector4[512]; 
         for (int i = 0; i < roditeljJedinica.childCount; i++)
         {
             points[i] = roditeljJedinica.GetChild(i).position; // Set the world position of each unit

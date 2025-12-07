@@ -73,14 +73,15 @@ public class Kontrole : MonoBehaviour
             }
             else
             {
-                RaycastHit hit;
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
-                {
-                    Instantiate(zgrada, hit.point, Quaternion.Euler(Vector3.zero));
+                if (FindAnyObjectByType<Menadzer>().materijal > 14) {
+                    RaycastHit hit;
+                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+                    {
+                        Instantiate(zgrada, hit.point, Quaternion.Euler(Vector3.zero));
+                    }
+                    odabiranje = true;
                 }
-                odabiranje = true;
             }
-
 
 
         }
@@ -124,11 +125,10 @@ public class Kontrole : MonoBehaviour
                                 odabraneJedinice[i].GetComponent<OsnovnaJedinica>().domet;
                         }
                         // radnik i rude
-                        else if((hit.transform.gameObject.layer == 9 || 
-                            hit.transform.gameObject.layer == 8) && 
-                            odabraneJedinice[i].GetComponent<Radnik>())
+                        else if(odabraneJedinice[i].GetComponent<Radnik>() && 
+                            (hit.transform.gameObject.layer == 9 || 
+                            hit.transform.gameObject.layer == 8))
                         {
-                            Debug.Log("meta");
                             odabraneJedinice[i].GetComponent<Radnik>().NovaMeta(hit.transform);
                             odabraneJedinice[i].GetComponent<NavMeshAgent>().destination = hit.point;
                         }
@@ -136,7 +136,7 @@ public class Kontrole : MonoBehaviour
                         {
                             odabraneJedinice[i].GetComponent<NavMeshAgent>().destination = hit.point;
                         }
-                        Debug.Log("sloj " + hit.transform.gameObject.layer);
+
                     }
 
                 }

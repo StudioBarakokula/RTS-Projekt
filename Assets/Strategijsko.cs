@@ -237,11 +237,11 @@ public class Strategijsko : MonoBehaviour
         else
         {
             // izvan
-            if (ostali.position.x == duljina / 2 - 1)
+            if (ostali.position.x >= duljina / 2 - 1)
             {
                 ostali.position -= Vector3.right;
             }
-            else if (ostali.position.x == -duljina / 2 + 1)
+            else if (ostali.position.x <= -duljina / 2 + 1)
             {
                 ostali.position += Vector3.right;
             }
@@ -261,11 +261,11 @@ public class Strategijsko : MonoBehaviour
         else
         {
             // izvan
-            if (ostali.position.z == visina / 2 - 1)
+            if (ostali.position.z >= visina / 2 - 1)
             {
                 ostali.position -= Vector3.forward;
             }
-            else if (ostali.position.z == -visina / 2 + 1)
+            else if (ostali.position.z <= -visina / 2 + 1)
             {
                 ostali.position += Vector3.forward;
             }

@@ -59,8 +59,13 @@ public class OsnovnaJedinica : MonoBehaviour
             && Vector3.Distance(transform.position, meta.position) < domet)
         {
             Pucanje();
+            agent.destination = transform.position;
         }
-        else if (trazenjeZadnje + trazenjePauza < Time.time)
+        else if(meta && Vector3.Distance(transform.position, meta.position) < domet)
+        {
+            agent.destination = meta.position;
+        }
+        else if (!meta && trazenjeZadnje + trazenjePauza < Time.time)
         {
             Trazenje();
         }
@@ -85,6 +90,11 @@ public class OsnovnaJedinica : MonoBehaviour
 
             zadnjePucanje = Time.time;
             municija--;
+
+
+            //radnik
+            if(meta.gameObject.layer  == 9){ FindAnyObjectByType<Menadzer>().DodajMaterijal(); }
+
 
             if (meta == null)
             {
