@@ -80,10 +80,12 @@ public class OsnovnaJedinica : MonoBehaviour
         // ako ima metaka moze pucat
         if (municija > 0)
         {
+
             efektPucanja.transform.position = transform.position;
             efektPucanja.Play();
+
             // stvaramo rendom broj i gledamo jeli unutar postotka za pogodit
-            if (Random.Range(0, 101) < sansaZaPogodak)
+            if (meta.GetComponent<NeprijateljOsnova>() && Random.Range(0, 101) < sansaZaPogodak)
             {
                 meta.GetComponent<NeprijateljOsnova>().Pogoden(napad);
             }

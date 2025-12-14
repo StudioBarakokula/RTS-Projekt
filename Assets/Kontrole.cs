@@ -23,8 +23,10 @@ public class Kontrole : MonoBehaviour
 
 
     bool odabiranje = true;
+    int vrstaZgrade = 0;
 
-    [SerializeField] Transform zgrada;
+    [SerializeField] public Transform[] zgrada;
+    Transform buducaZgrada;
 
 
 
@@ -73,16 +75,18 @@ public class Kontrole : MonoBehaviour
             }
             else
             {
-                if (FindAnyObjectByType<Menadzer>().materijal > 14) {
-                    RaycastHit hit;
-                    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
-                    {
-                        Instantiate(zgrada, hit.point, Quaternion.Euler(Vector3.zero));
-                    }
-                    odabiranje = true;
-                }
-            }
 
+                if (FindAnyObjectByType<Menadzer>().materijal > zgrada[vrstaZgrade].GetComponent<
+                    Zgrada>().cijenaMaterijala) 
+                {
+                    odabiranje = true;
+                    buducaZgrada.GetComponent<Zgrada>().enabled = true;
+                    buducaZgrada = null;
+                    FindAnyObjectByType<Menadzer>().MakniMaterijal(
+                        zgrada[vrstaZgrade].GetComponent<Zgrada>().cijenaMaterijala);
+                }
+
+            }
 
         }
         // kad drzis minja se sta se bira
@@ -97,6 +101,11 @@ public class Kontrole : MonoBehaviour
                 OdabirJedinica();
             }
 
+        }
+        else if (!odabiranje && (Input.GetKey(KeyCode.Mouse1) || Input.GetKey(KeyCode.Escape)))
+        {
+            Destroy(buducaZgrada.gameObject);
+            buducaZgrada = null;
         }
         // i kad se digne klik onda se odabire
         else if (Input.GetKeyUp(KeyCode.Mouse0))
@@ -144,10 +153,32 @@ public class Kontrole : MonoBehaviour
             }
             
         }
-        // broj 1 
+        // broj 1 2 3
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            odabiranje = false;
+            OdabirVrstZgrade(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            OdabirVrstZgrade(1);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            OdabirVrstZgrade(2);
+        }
+
+        if (!odabiranje)
+        {
+
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+            {
+                buducaZgrada.position = hit.point;
+
+                //if (Physics.CheckBox()) { }
+
+            }
+
         }
 
     }
@@ -230,6 +261,26 @@ public class Kontrole : MonoBehaviour
         return false;
 
     }
+
+
+
+
+
+    void OdabirVrstZgrade(int vrsta)
+    {
+
+        odabiranje = false;
+        vrstaZgrade = vrsta;
+
+        buducaZgrada = Instantiate(zgrada[vrstaZgrade], Vector3.zero, Quaternion.Euler(Vector3.zero));
+        
+
+    }
+
+
+    public void RadnikZgrada() { odabiranje = true; vrstaZgrade = 0; }
+    public void VojnikZgrada() { odabiranje = true; vrstaZgrade = 1; }
+    public void TenkZgrada() { odabiranje = true; vrstaZgrade = 2; }
 
 
 }

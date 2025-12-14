@@ -3,19 +3,23 @@ using UnityEngine;
 public class Zgrada : MonoBehaviour
 {
 
-    // Transform sa velikin T je vrsta varijable, ki float int, malo transform je za objekt na kojem je skripta
-
     [SerializeField] Transform jedinicaZaStvaranje;
     [SerializeField] Transform tockaStvaranja;
     [SerializeField] Transform roditelj;
     [SerializeField] float vrijemeZaStvaranje = 4;
     float zadnjeStvaranje;
 
+    public int cijenaMaterijala = 100;
+
+
 
 
     void Start()
     {
-        
+
+        roditelj = FindFirstObjectByType<Menadzer>().roditeljJedinica;
+
+
     }
     void Update()
     {
